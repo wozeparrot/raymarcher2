@@ -31,5 +31,5 @@ f.close()
 # run program
 sq.eval()
 
-frame = np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3))
+frame = np.flip(np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3)), axis=0)
 plt.imsave("image.png", frame)

@@ -165,8 +165,8 @@ void main() {
     vec3 look = cam.look;
 
     vec2 rp = rayPixel(vec2(size[0], size[1]), fpos);
-    mat4 cm = setCamera(eye, look, 0.0f);
-    vec3 dirc = (normalize(vec4(rp, FOV, 1)) * cm).xyz;
+    mat4 cm = setCamera(eye, look, 0.0);
+    vec3 dirc = (cm * normalize(vec4(rp, FOV, 1))).xyz;
 
     // Raymarch
     Hit hit = raymarch(eye, dirc);
