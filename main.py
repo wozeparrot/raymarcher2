@@ -5,9 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import imageio
-from pygifsicle import optimize
 
-SIZE = (4096, 4096)
+SIZE = (64, 64)
 
 mgr = kp.Manager()
 
@@ -31,19 +30,22 @@ sq.end()
 # close shader file
 f.close()
 
-# run program
-sq.eval()
+# render frames
+for i in range(int(sys.argv[2]), int(sys.argv[3])):
+    print("rendering frame {}".format(i))
 
-frame = np.flip(np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3)), axis=0)
-plt.imsave("image.png", frame)
+    # run program
+    tensor_frame[0] = i
+    sq.eval()
 
+    # save frame to output
+    frame = np.flip(np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3)), axis=0)
+    plt.imsave("output/image{}.png".format(i), frame)
 
-
-# decomment once you're done
-#image_path = Path('images')
-#images = list(image_path.glob('*.png'))
-#image_list = []
-#for png in images:
-#    image_list.append(imageio.imread(png))
-#imageio.mimwrite('out.gif', image_list, fps=24)
-#optimize('out.gif')
+# generate gif
+image_path = Path('output/')
+images = list(image_path.glob('image*.png'))
+image_list = []
+for png in images:
+   image_list.append(imageio.imread(png))
+imageio.mimwrite('out.gif', image_list, fps=12)

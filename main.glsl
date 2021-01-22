@@ -152,7 +152,7 @@ vec2 rayPixel(vec2 size, vec2 pos) {
 /** Shader io */
 layout (set = 0, binding = 0) buffer boutf { float outf[]; };
 layout (set = 0, binding = 1) buffer bsize { float size[]; };
-layout (set = 0, binding = 2) buffer bframe { int frame[]; };
+layout (set = 0, binding = 2) buffer bframe { float frame[]; };
 
 /** Main render function */
 void main() {

@@ -57,7 +57,7 @@ vec3 tNormal(const vec3 p)
 /** SDF functions */
 Hit terrain(vec3 p) {
     p -= vec3(0, -2, 0);
-    p /= 10.0f;
+    p /= 6.0f;
     Hit hit;
     float e = fbm(vec2(p.x, p.z));
     e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
@@ -81,10 +81,10 @@ Hit scene(vec3 p) {
 }
 
 /** Camera function */
-Camera camera(const int frame) {
+Camera camera(const float frame) {
     Camera c;
-    c.pos = vec3(30 - frame, frame, -frame);
-    c.look = vec3(50 - float(frame), 8, -50 + float(frame));
+    c.pos = vec3(30 - frame / 8, frame / 8, -frame / 8);
+    c.look = vec3(50 - frame / 8, frame / 9, -50 + frame / 8);
     return c;
 }
 

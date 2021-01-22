@@ -67,9 +67,9 @@ Hit scene(vec3 p) {
 }
 
 /** Camera function */
-Camera camera(const int frame) {
+Camera camera(const float frame) {
     Camera c;
-    c.pos = vec3(-8, sin(float(frame)) + 5.0f, 7);
+    c.pos = vec3(-8, sin(frame / 2) + 5.0f, 7);
     c.look = vec3(0, 0, 0);
     return c;
 }
