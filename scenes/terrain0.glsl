@@ -3,9 +3,9 @@
 
 /** Scene settings */
 const float EPS = 0.001;
-const int MAX_STEPS = 4096;
+const int MAX_STEPS = 1024;
 const float NEAR_CLIP = 0.01;
-const float FAR_CLIP = 256;
+const float FAR_CLIP = 512;
 const float FOV = 45;
 
 /** Constants */
