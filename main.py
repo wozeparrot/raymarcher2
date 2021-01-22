@@ -47,5 +47,5 @@ elif (sys.argv[1] == "gif"):
     image_path = Path('output/')
     image_list = []
     for it in range(int(sys.argv[2]), int(sys.argv[3])):
-        image_list.append(imageio.imread('output/image'+str(it)+'.gif'))
+        image_list.append(imageio.imread('output/image'+str(it)+'.png'))
     imageio.mimwrite('out.gif', image_list, format='GIF', fps=24)
