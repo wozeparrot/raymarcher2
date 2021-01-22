@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import imageio
-from pygifsicle import optimize
 
 SIZE = (4096, 4096)
 
@@ -46,4 +45,4 @@ plt.imsave("image.png", frame)
 #for png in images:
 #    image_list.append(imageio.imread(png))
 #imageio.mimwrite('out.gif', image_list, fps=24)
-#optimize('out.gif')
+
