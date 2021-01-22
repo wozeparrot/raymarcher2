@@ -45,6 +45,6 @@ if (sys.argv[1] == "render"):
 elif (sys.argv[1] == "gif"):
     # generate gif
     image_path = Path('output/')
-    for it in range(argv[2], argv[3]):
+    for it in range(sys.argv[2], sys.argv[3]):
         image_list.append(imageio.imread('output/image'+it+'.gif'))
     imageio.mimwrite('out.gif', image_list, format='GIF', fps=24)
