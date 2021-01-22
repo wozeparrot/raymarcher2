@@ -47,7 +47,6 @@ Hit sphere(vec3 p) {
     Hit hit;
     hit.dist = length(p) - 1;
     Mat m = mSphere;
-    m.metallic = p.y;
     hit.mat = m;
     return hit;
 }
