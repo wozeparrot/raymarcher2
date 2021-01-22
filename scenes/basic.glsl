@@ -1,16 +1,15 @@
 #version 450
-
 #include "pre.glsl"
 
 /** Scene settings */
-float EPS = 0.0001;
-int MAX_STEPS = 512;
-float NEAR_CLIP = 0.01;
-float FAR_CLIP = 128;
-float FOV = 1.5;
+const float EPS = 0.0001;
+const int MAX_STEPS = 512;
+const float NEAR_CLIP = 0.01;
+const float FAR_CLIP = 128;
+const float FOV = 1.5;
 
 /** Constants */
-Mat mSphere = Mat(
+const Mat mSphere = Mat(
     vec3(0.5, 0.2, 0.8),
     1.0,
     0.4,
@@ -18,7 +17,7 @@ Mat mSphere = Mat(
     0.0
 );
 
-Mat mPlane = Mat(
+const Mat mPlane = Mat(
     vec3(0.4, 0.4, 0.4),
     0.0,
     1.0,
@@ -26,7 +25,7 @@ Mat mPlane = Mat(
     0.0
 );
 
-Mat mBox = Mat(
+const Mat mBox = Mat(
     vec3(0.3, 0.9, 0.6),
     0.6,
     0.4,

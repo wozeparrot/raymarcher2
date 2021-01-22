@@ -15,7 +15,7 @@ tensor_out = kp.Tensor(np.zeros((SIZE[0] * SIZE[1] * 3)))
 mgr.eval_tensor_create_def([tensor_out, tensor_size, tensor_frame])
 
 # read shader
-f = open("a.spv", "rb")
+f = open("scenes/" + sys.argv[1] + ".spv", "rb")
 
 # create program
 sq = mgr.create_sequence()
