@@ -3,8 +3,11 @@ import kp
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
+import imageio
+from pygifsicle import optimize
 
-SIZE = (320, 240)
+SIZE = (4096, 4096)
 
 mgr = kp.Manager()
 
@@ -33,3 +36,14 @@ sq.eval()
 
 frame = np.flip(np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3)), axis=0)
 plt.imsave("image.png", frame)
+
+
+
+# decomment once you're done
+#image_path = Path('images')
+#images = list(image_path.glob('*.png'))
+#image_list = []
+#for png in images:
+#    image_list.append(imageio.imread(png))
+#imageio.mimwrite('out.gif', image_list, fps=24)
+#optimize('out.gif')

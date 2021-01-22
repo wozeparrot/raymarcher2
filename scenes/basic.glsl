@@ -3,8 +3,8 @@
 #include "pre.glsl"
 
 /** Scene settings */
-float EPS = 0.0001;
-int MAX_STEPS = 512;
+float EPS = 0.001;
+int MAX_STEPS = 4096;
 float NEAR_CLIP = 0.01;
 float FAR_CLIP = 128;
 float FOV = 1.5;
