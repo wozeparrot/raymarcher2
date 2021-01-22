@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import imageio
 
-SIZE = (400, 300)
+SIZE = (256, 256)
 
 if (sys.argv[1] == "render"):
     mgr = kp.Manager(int(sys.argv[5]))
@@ -45,8 +45,6 @@ if (sys.argv[1] == "render"):
 elif (sys.argv[1] == "gif"):
     # generate gif
     image_path = Path('output/')
-    images = list(image_path.glob('image*.png'))
-    image_list = []
-    for png in images:
-        image_list.append(imageio.imread(png))
-    imageio.mimwrite('out.gif', image_list, fps=24)
+    for it in range(argv[2], argv[3]):
+        image_list.append(imageio.imread('output/image'+it+'.gif'))
+    imageio.mimwrite('out.gif', image_list, format='GIF', fps=24)
