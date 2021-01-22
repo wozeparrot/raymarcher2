@@ -69,7 +69,7 @@ Hit scene(vec3 p) {
 /** Camera function */
 Camera camera(const float frame) {
     Camera c;
-    c.pos = vec3(-8, sin(frame / 2) + 5.0f, 7);
+    c.pos = vec3(-8, sin(frame / 10) * 10 + 5.0f, 7);
     c.look = vec3(0, 0, 0);
     return c;
 }
@@ -80,10 +80,12 @@ vec3 skyColor(vec3 eye, vec3 dirc) {
 }
 
 /** Lights */
-const Light LIGHTS[] = {
-    { vec3(0, 3, 0), vec3(10, 10, 10) },
-    { vec3(0, 0, 3), vec3(10, 10, 10) }
-};
-const int LIGHT_COUNT = 2;
+#define Lights Light[2]
+Lights lights(const float frame) {
+    return Lights(
+        Light(vec3(sin(frame / 10) * 10, 3, 0), vec3(10, 10, 10)),
+        Light(vec3(0, 0, 3), vec3(10, 10, 10))
+    );
+}
 
 #include "main.glsl"

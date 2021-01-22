@@ -120,11 +120,11 @@ vec3 lightC(Light light, Mat mat, vec3 p, vec3 eye) {
 }
 
 /** Shading function */
-vec4 shade(Mat mat, vec3 p, vec3 eye) {
+vec4 shade(Mat mat, vec3 p, vec3 eye, Lights l) {
     vec3 color = mat.albedo * 0.03f * mat.ambient;
 
-    for (int i = 0; i < LIGHT_COUNT; i++) {
-        color += lightC(LIGHTS[i], mat, p, eye);
+    for (int i = 0; i < l.length(); i++) {
+        color += lightC(l[i], mat, p, eye);
     }
 
     return vec4(color, 1.0);
@@ -176,7 +176,8 @@ void main() {
 
     // Only compute color if hit
     if (hit.dist <= FAR_CLIP - EPS) {
-        vec4 res = shade(hit.mat, eye + dirc * hit.dist, eye);
+        Lights l = lights(frame[0]);
+        vec4 res = shade(hit.mat, eye + dirc * hit.dist, eye, l);
         color = color * (1.0f - res.w) + res.xyz;
     }
 
