@@ -186,7 +186,7 @@ void main() {
 
     // Clamp color and output
     color = clamp(color, 0.0f, 1.0f);
-    outf[gid * 3] = fpos.x;
+    outf[gid * 3] = color.x;
     outf[gid * 3 + 1] = color.y;
     outf[gid * 3 + 2] = color.z;
 }

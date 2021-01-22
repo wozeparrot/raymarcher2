@@ -8,11 +8,11 @@ SIZE = (320, 240)
 
 mgr = kp.Manager()
 
-tensor_size = kp.Tensor([2, 2, 2])
+tensor_size = kp.Tensor(SIZE)
 tensor_frame = kp.Tensor([0])
 tensor_out = kp.Tensor(np.zeros((SIZE[0] * SIZE[1] * 3)))
 
-mgr.eval_tensor_create_def([tensor_size, tensor_frame, tensor_out])
+mgr.eval_tensor_create_def([tensor_out, tensor_size, tensor_frame])
 
 # read shader
 f = open("a.spv", "rb")
