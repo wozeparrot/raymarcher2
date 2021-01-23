@@ -20,13 +20,21 @@ if (sys.argv[1] == "render"):
     # read shader
     f = open("scenes/" + sys.argv[2] + ".spv", "rb")
 
-    # create program
-    sq = mgr.create_sequence()
-    sq.begin()
-    sq.record_tensor_sync_device([tensor_frame])
-    sq.record_algo_data([tensor_out, tensor_size, tensor_frame], f.read())
-    sq.record_tensor_sync_local([tensor_out])
-    sq.end()
+    # create sequences
+    sq_sd = mgr.create_sequence()
+    sq_sd.begin()
+    sq_sd.record_tensor_sync_device([tensor_frame])
+    sq_sd.end()
+
+    sq_r = mgr.create_sequence()
+    sq_r.begin()
+    sq_r.record_algo_data([tensor_out, tensor_size, tensor_frame], f.read())
+    sq_r.end()
+
+    sq_sl = mgr.create_sequence()
+    sq_sl.begin()
+    sq_sl.record_tensor_sync_local([tensor_out])
+    sq_sl.end()
 
     # close shader file
     f.close()
@@ -37,7 +45,9 @@ if (sys.argv[1] == "render"):
 
         # run program
         tensor_frame[0] = i
-        sq.eval()
+        sq_sd.eval()
+        sq_r.eval()
+        sq_sl.eval()
 
         # save frame to output
         frame = np.flip(np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3)), axis=0)

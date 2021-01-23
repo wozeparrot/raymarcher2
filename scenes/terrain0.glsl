@@ -81,7 +81,7 @@ Hit terrainSDF(vec3 p) {
     p /= 40.0f;
     Hit hit;
     float e = fbm(vec2(p.x, p.z));
-    e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
+    // e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
     e *= 0.5f;
     hit.dist = (p.y - e);
     hit.id = Terrain;
@@ -96,8 +96,8 @@ Hit scene(vec3 p) {
 /** Camera function */
 Camera camera() {
     Camera c;
-    c.pos = vec3(30 - frame, 10 + frame, -frame);
-    c.look = vec3(50 - frame, 10 + 8, -50 + frame);
+    c.pos = vec3(30 - frame, frame, -frame);
+    c.look = vec3(50 - frame, 8, -50 + frame);
     return c;
 }
 
