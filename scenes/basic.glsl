@@ -1,12 +1,13 @@
 #version 450
-#include "pre.glsl"
 
 /** Scene settings */
-float EPS = 0.001;
-int MAX_STEPS = 4096;
-float NEAR_CLIP = 0.01;
-float FAR_CLIP = 128;
-float FOV = 1.5;
+const float EPS = 0.001;
+const int MAX_STEPS = 4096;
+const float NEAR_CLIP = 0.01;
+const float FAR_CLIP = 128;
+const float FOV = 1.5;
+
+#include "pre.glsl"
 
 /** Constants */
 const Mat mSphere = Mat(
@@ -33,36 +34,67 @@ const Mat mBox = Mat(
     0.0
 );
 
+/** Object Declaration */
+#define Sphere 1
+#define Plane 2
+#define Box 3
+
+ObjHit planeOH(vec3 p) {
+    vec3 norm = vec3(0, 1, 0);
+    return ObjHit(norm, mPlane);
+}
+
+ObjHit sphereOH(vec3 p) {
+    vec3 norm = calcNormal(p);
+    return ObjHit(norm, mSphere);
+}
+
+ObjHit boxOH(vec3 p) {
+    vec3 norm = calcNormal(p);
+    return ObjHit(norm, mBox);
+}
+
+// Object ID switch
+ObjHit object(uint id, vec3 p) {
+    switch (id) {
+        case Sphere:
+        return sphereOH(p);
+        case Plane:
+        return planeOH(p);
+        case Box:
+        return boxOH(p);
+    }
+}
+
 /** SDF functions */
-Hit plane(vec3 p) {
+Hit planeSDF(vec3 p) {
     p -= vec3(0, -1, 0);
     Hit hit;
     hit.dist = p.y;
-    hit.mat = mPlane;
+    hit.id = Plane;
     return hit;
 }
 
-Hit sphere(vec3 p) {
+Hit sphereSDF(vec3 p) {
     p -= vec3(1, 0, 1);
     Hit hit;
     hit.dist = length(p) - abs(sin(frame / 10) * 2);
-    Mat m = mSphere;
-    hit.mat = m;
+    hit.id = Sphere;
     return hit;
 }
 
-Hit box(vec3 p) {
+Hit boxSDF(vec3 p) {
     p -= vec3(0, sin(frame / 10) * 4, -2);
     Hit hit;
     vec3 q = max(abs(p) - vec3(1, 1, 1), 0.0f);
     hit.dist = length(q) - min(max(q.x, max(q.y, q.z)), 0.0f);
-    hit.mat = mBox;
+    hit.id = Box;
     return hit;
 }
 
 /** Scene function */
 Hit scene(vec3 p) {
-    return min(min(plane(p), sphere(p)), box(p));
+    return min(min(planeSDF(p), sphereSDF(p)), boxSDF(p));
 }
 
 /** Camera function */

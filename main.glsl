@@ -19,17 +19,6 @@ Hit raymarch(vec3 eye, vec3 dirc) {
     return hit;
 }
 
-/** Normal estimation */
-const vec2 kcn = vec2(1, -1);
-vec3 calcNormal(vec3 p) {
-    return normalize(
-        kcn.xyy * scene(p + kcn.xyy * EPS).dist +
-        kcn.yyx * scene(p + kcn.yyx * EPS).dist +
-        kcn.yxy * scene(p + kcn.yxy * EPS).dist +
-        kcn.xxx * scene(p + kcn.xxx * EPS).dist
-    );
-}
-
 /** Shadow calculation */
 float shadow(vec3 lightDir, float lightDist, vec3 p) {
     float res = 1.0f;
@@ -88,8 +77,7 @@ float geometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
-vec3 lightC(Light light, Mat mat, vec3 p, vec3 eye) {
-    vec3 norm = calcNormal(p);
+vec3 lightC(Light light, ObjHit oh, vec3 p, vec3 eye) {
     vec3 viewDir = normalize(eye - p);
 
     vec3 lightDir = normalize(light.pos - p);
@@ -100,38 +88,38 @@ vec3 lightC(Light light, Mat mat, vec3 p, vec3 eye) {
     vec3 radiance = light.intensity * attenuation;
 
     vec3 f0 = vec3(0.04);
-    f0 = mix(f0, mat.albedo, mat.metallic);
+    f0 = mix(f0, oh.mat.albedo, oh.mat.metallic);
     vec3 f = fresnelSchlick(max(dot(halfwayDir, viewDir), 0.0f), f0);
 
-    float ndf = distributionGGX(norm, halfwayDir, mat.roughness);
-    float g = geometrySmith(norm, viewDir, lightDir, mat.roughness);
+    float ndf = distributionGGX(oh.norm, halfwayDir, oh.mat.roughness);
+    float g = geometrySmith(oh.norm, viewDir, lightDir, oh.mat.roughness);
 
     vec3 num = ndf * g * f;
-    float denom = 4.0f * max(dot(norm, viewDir), 0.0f) * max(dot(norm, lightDir), 0.0f);
+    float denom = 4.0f * max(dot(oh.norm, viewDir), 0.0f) * max(dot(oh.norm, lightDir), 0.0f);
     vec3 specular = num / max(denom, EPS);
 
     vec3 kS = f;
     vec3 kD = vec3(1.0) - kS;
 
-    kD *= 1.0f - mat.metallic;
+    kD *= 1.0f - oh.mat.metallic;
 
-    float dotNL = max(dot(norm, lightDir), 0.0f);
-    return (kD * mat.albedo / PI + specular) * radiance * dotNL * shadow(lightDir, dist, p);
+    float dotNL = max(dot(oh.norm, lightDir), 0.0f);
+    return (kD * oh.mat.albedo / PI + specular) * radiance * dotNL * shadow(lightDir, dist, p);
 }
 
 /** Shading function */
-vec4 shade(Mat mat, vec3 p, vec3 eye, Lights l) {
-    vec3 color = mat.albedo * 0.03f * mat.ambient;
+vec4 shade(ObjHit oh, vec3 p, vec3 eye, Lights l) {
+    vec3 color = oh.mat.albedo * 0.03f * oh.mat.ambient;
 
     for (int i = 0; i < l.length(); i++) {
-        color += lightC(l[i], mat, p, eye);
+        color += lightC(l[i], oh, p, eye);
     }
 
     return vec4(color, 1.0);
 }
 
 /** Camera matrix calculation */
-mat4 setCamera(vec3 eye, vec3 look, float rot ) {
+mat4 setCamera(vec3 eye, vec3 look, float rot) {
 	vec3 cw = normalize(look - eye);
 	vec3 cp = vec3(sin(rot), cos(rot), 0.0f);
 	vec3 cu = normalize(cross(cw, cp));
@@ -175,8 +163,11 @@ void main() {
 
     // Only compute color if hit
     if (hit.dist <= FAR_CLIP - EPS) {
+        // Get lights for frame
         Lights l = lights();
-        vec4 res = shade(hit.mat, eye + dirc * hit.dist, eye, l);
+        // Get object hit data
+        ObjHit oh = object(hit.id, eye + dirc * hit.dist);
+        vec4 res = shade(oh, eye + dirc * hit.dist, eye, l);
         color = color * (1.0f - res.w) + res.xyz;
     }
 

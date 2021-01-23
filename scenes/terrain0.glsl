@@ -1,12 +1,13 @@
 #version 450
-#include "pre.glsl"
 
 /** Scene settings */
 const float EPS = 0.001;
 const int MAX_STEPS = 2048;
 const float NEAR_CLIP = 0.01;
 const float FAR_CLIP = 256;
-const float FOV = 45;
+const float FOV = 4.0;
+
+#include "pre.glsl"
 
 /** Constants */
 const Mat mTerrain = Mat(
@@ -47,44 +48,56 @@ float fbm(vec2 p) {
     return t;
 }
 
-vec3 tNormal(const vec3 p)
+vec3 terrainNorm(const vec3 p)
 {
     return normalize(vec3(fbm(vec2(p.x - EPS, p.z)) - fbm(vec2(p.x + EPS, p.z)),
                           2.0f * EPS,
                           fbm(vec2(p.x, p.z - EPS)) - fbm(vec2(p.x, p.z + EPS))));
 }
 
+/** Object Declaration */
+#define Terrain 1
+
+ObjHit terrainOH(vec3 p) {
+    Mat m = mTerrain;
+    vec3 norm = terrainNorm(p);
+    if (dot(norm, vec3(0, 1, 0)) > 0.2f) {
+        m.albedo = mix(mix(vec3(0.2, 0.6, 0.1), vec3(0.49, 0.27, 0.13), clamp(p.y / 10, 0.0, 1.0)), vec3(1), clamp(smoothstep(0.2 + noise(vec2(p.x, p.z)) / 2, 0.3, p.y / 10), 0.0, 1.0));
+    }
+    return ObjHit(norm, m);
+}
+
+// Object ID switch
+ObjHit object(uint id, vec3 p) {
+    switch (id) {
+        case Terrain:
+        return terrainOH(p);
+    }
+}
+
 /** SDF functions */
-Hit terrain(vec3 p) {
+Hit terrainSDF(vec3 p) {
     p -= vec3(0, -2, 0);
-    p /= 6.0f;
+    p /= 40.0f;
     Hit hit;
     float e = fbm(vec2(p.x, p.z));
-    // e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
+    e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
     e *= 0.5f;
     hit.dist = (p.y - e);
-
-    Mat m = mTerrain;
-    
-    vec3 norm = tNormal(p);
-    if (dot(norm, vec3(0, 1, 0)) > 0.1f) {
-        m.albedo = vec3(1);
-    }
-    hit.mat = m;
-    
+    hit.id = Terrain;
     return hit;
 }
 
 /** Scene function */
 Hit scene(vec3 p) {
-    return terrain(p);
+    return terrainSDF(p);
 }
 
 /** Camera function */
 Camera camera() {
     Camera c;
-    c.pos = vec3(30 - frame, 10 + sin(frame / 40) * 0.4, -50);
-    c.look = vec3(0 - frame, 8 + cos(frame / 40) * 0.4, -50);
+    c.pos = vec3(30 - frame, 10 + frame, -frame);
+    c.look = vec3(50 - frame, 10 + 8, -50 + frame);
     return c;
 }
 
@@ -97,7 +110,7 @@ vec3 skyColor(vec3 eye, vec3 dirc) {
 #define Lights Light[1]
 Lights lights() {
     return Lights(
-        Light(vec3(30 - frame, 80, -60), vec3(10000, 10000, 10000))
+        Light(vec3(50, 80, -50), vec3(10000, 10000, 10000))
     );
 }
 

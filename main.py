@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import imageio
 
-SIZE = (64, 64)
+SIZE = (640, 480)
 
 if (sys.argv[1] == "render"):
     mgr = kp.Manager(int(sys.argv[5]))
