@@ -60,14 +60,14 @@ Hit terrain(vec3 p) {
     p /= 6.0f;
     Hit hit;
     float e = fbm(vec2(p.x, p.z));
-    e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
+    // e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
     e *= 0.5f;
     hit.dist = (p.y - e);
 
     Mat m = mTerrain;
     
     vec3 norm = tNormal(p);
-    if (dot(norm, vec3(0, 1, 0)) > 0.3f) {
+    if (dot(norm, vec3(0, 1, 0)) > 0.1f) {
         m.albedo = vec3(1);
     }
     hit.mat = m;
@@ -83,8 +83,8 @@ Hit scene(vec3 p) {
 /** Camera function */
 Camera camera() {
     Camera c;
-    c.pos = vec3(30 + frame, 20 + sin(frame / 40) * 4, -50);
-    c.look = vec3(0 + frame, 10 + cos(frame / 40) * 2, -50);
+    c.pos = vec3(30 - frame, 10 + sin(frame / 40) * 0.4, -50);
+    c.look = vec3(0 - frame, 8 + cos(frame / 40) * 0.4, -50);
     return c;
 }
 
@@ -97,7 +97,7 @@ vec3 skyColor(vec3 eye, vec3 dirc) {
 #define Lights Light[1]
 Lights lights() {
     return Lights(
-        Light(vec3(30 + frame, 80, -60), vec3(10000, 10000, 10000))
+        Light(vec3(30 - frame, 80, -60), vec3(10000, 10000, 10000))
     );
 }
 
