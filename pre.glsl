@@ -34,3 +34,7 @@ Hit min(Hit x, Hit y) {
 /** Constants */
 const vec3 UP = vec3(0, 1, 0);
 #define PI 3.1415926538
+
+/** Shader io */
+layout (set = 0, binding = 2) buffer bframe { float aframe[]; };
+float frame = aframe[0];

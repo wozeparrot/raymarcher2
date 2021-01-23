@@ -152,7 +152,6 @@ vec2 rayPixel(vec2 size, vec2 pos) {
 /** Shader io */
 layout (set = 0, binding = 0) buffer boutf { float outf[]; };
 layout (set = 0, binding = 1) buffer bsize { float size[]; };
-layout (set = 0, binding = 2) buffer bframe { float frame[]; };
 
 /** Main render function */
 void main() {
@@ -160,7 +159,7 @@ void main() {
 
     vec2 fpos = vec2(gid % uint(size[0]), gid / uint(size[0]));
 
-    Camera cam = camera(frame[0]);
+    Camera cam = camera();
     vec3 eye = cam.pos;
     vec3 look = cam.look;
 
@@ -176,7 +175,7 @@ void main() {
 
     // Only compute color if hit
     if (hit.dist <= FAR_CLIP - EPS) {
-        Lights l = lights(frame[0]);
+        Lights l = lights();
         vec4 res = shade(hit.mat, eye + dirc * hit.dist, eye, l);
         color = color * (1.0f - res.w) + res.xyz;
     }

@@ -81,10 +81,10 @@ Hit scene(vec3 p) {
 }
 
 /** Camera function */
-Camera camera(const float frame) {
+Camera camera() {
     Camera c;
-    c.pos = vec3(30 + sin(frame / 100) * 100, 20, -50 + cos(frame / 100) * 100);
-    c.look = vec3(30, 10, -50);
+    c.pos = vec3(30 + frame, 20 + sin(frame / 40) * 4, -50);
+    c.look = vec3(0 + frame, 10 + cos(frame / 40) * 2, -50);
     return c;
 }
 
@@ -94,10 +94,10 @@ vec3 skyColor(vec3 eye, vec3 dirc) {
 }
 
 /** Lights */
-#define Lights Light[2]
-Lights lights(const float frame) {
+#define Lights Light[1]
+Lights lights() {
     return Lights(
-        Light(vec3(50, 100, -50), vec3(10000, 10000, 10000))
+        Light(vec3(30 + frame, 80, -60), vec3(10000, 10000, 10000))
     );
 }
 

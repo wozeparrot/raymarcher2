@@ -45,14 +45,14 @@ Hit plane(vec3 p) {
 Hit sphere(vec3 p) {
     p -= vec3(1, 0, 1);
     Hit hit;
-    hit.dist = length(p) - 1;
+    hit.dist = length(p) - abs(sin(frame / 10) * 2);
     Mat m = mSphere;
     hit.mat = m;
     return hit;
 }
 
 Hit box(vec3 p) {
-    p -= vec3(0, 0, -2);
+    p -= vec3(0, sin(frame / 10) * 4, -2);
     Hit hit;
     vec3 q = max(abs(p) - vec3(1, 1, 1), 0.0f);
     hit.dist = length(q) - min(max(q.x, max(q.y, q.z)), 0.0f);
@@ -66,9 +66,9 @@ Hit scene(vec3 p) {
 }
 
 /** Camera function */
-Camera camera(const float frame) {
+Camera camera() {
     Camera c;
-    c.pos = vec3(-8, sin(frame / 10) * 10 + 5.0f, 7);
+    c.pos = vec3(sin(frame / 20) * 10, 5.0f, cos(frame / 20) * 10);
     c.look = vec3(0, 0, 0);
     return c;
 }
@@ -80,7 +80,7 @@ vec3 skyColor(vec3 eye, vec3 dirc) {
 
 /** Lights */
 #define Lights Light[2]
-Lights lights(const float frame) {
+Lights lights() {
     return Lights(
         Light(vec3(sin(frame / 10) * 10, 3, 0), vec3(10, 10, 10)),
         Light(vec3(0, 0, 3), vec3(10, 10, 10))
