@@ -81,7 +81,6 @@ Hit terrainSDF(vec3 p) {
     p /= 40.0f;
     Hit hit;
     float e = fbm(vec2(p.x, p.z));
-    // e = e + 0.15f * smoothstep(-0.08f, -0.01f, e);
     e *= 0.5f;
     hit.dist = (p.y - e);
     hit.id = Terrain;

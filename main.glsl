@@ -22,14 +22,18 @@ Hit raymarch(vec3 eye, vec3 dirc) {
 /** Shadow calculation */
 float shadow(vec3 lightDir, float lightDist, vec3 p) {
     float res = 1.0f;
+    float ph = 1e20;
     float depth = NEAR_CLIP;
     for (int i = 0; i < MAX_STEPS; i++) {
         Hit hit = scene(p + lightDir * depth);
         if (depth + hit.dist > lightDist) {
             break;
         }
-        res = min(res, 10.0f * hit.dist / depth);
+        float y = hit.dist * hit.dist / (2.0 * ph);
+        float d = sqrt(hit.dist * hit.dist - y * y);
+        res = min(res, 10.0f * d / max(0.0, depth - y));
         depth += hit.dist;
+        ph = hit.dist;
         if (res < EPS || depth >= FAR_CLIP) {
             break;
         }
