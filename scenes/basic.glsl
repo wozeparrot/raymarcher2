@@ -2,20 +2,24 @@
 
 /** Scene settings */
 const float EPS = 0.001;
-const int MAX_STEPS = 4096;
+const int MAX_STEPS = 4096 * 4;
 const float NEAR_CLIP = 0.01;
 const float FAR_CLIP = 128;
 const float FOV = 1.5;
+const int MAX_BOUNCES = 2;
+#define Lights Light[2]
 
 #include "pre.glsl"
 
 /** Constants */
 const Mat mSphere = Mat(
-    vec3(0.5, 0.2, 0.8),
+    vec3(0.0, 0.0, 0.0),
+    0.0,
+    0.0,
+    0.0,
+    0.0,
     1.0,
-    0.4,
-    0.2,
-    0.0
+    1.125
 );
 
 const Mat mPlane = Mat(
@@ -23,15 +27,19 @@ const Mat mPlane = Mat(
     0.0,
     1.0,
     0.2,
-    0.0
+    0.0,
+    0.0,
+    1.0
 );
 
 const Mat mBox = Mat(
     vec3(0.3, 0.9, 0.6),
+    1.0,
     0.6,
-    0.4,
     0.1,
-    0.0
+    0.0,
+    0.0,
+    1.0
 );
 
 /** Object Declaration */
@@ -76,9 +84,9 @@ Hit planeSDF(vec3 p) {
 }
 
 Hit sphereSDF(vec3 p) {
-    p -= vec3(1, 0, 1);
+    p -= vec3(1, 1, 1);
     Hit hit;
-    hit.dist = length(p) - abs(sin(frame / 10) * 2);
+    hit.dist = length(p) - abs(sin(frame / 10) * 2) - 1;
     hit.id = Sphere;
     return hit;
 }
@@ -111,7 +119,6 @@ vec3 skyColor(vec3 eye, vec3 dirc) {
 }
 
 /** Lights */
-#define Lights Light[2]
 Lights lights() {
     return Lights(
         Light(vec3(sin(frame / 10) * 10, 3, 0), vec3(10, 10, 10)),

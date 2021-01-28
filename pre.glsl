@@ -5,6 +5,8 @@ struct Mat {
     float roughness;
     float ambient;
     float reflectance;
+    float refractance;
+    float ior;
 };
 
 struct Light {
@@ -28,7 +30,10 @@ struct ObjHit {
 };
 
 /** Forward Declaration */
-Hit scene(vec3 p);
+vec3 calcNormal(vec3 p);
+vec4 shade(ObjHit oh, vec3 p, vec3 eye, Lights l);
+float shadow(vec3 lightDir, float lightDist, vec3 p);
+float shadow(vec3 lightDir, vec3 p);
 
 /** Helper functions */
 // min between hits
@@ -38,17 +43,6 @@ Hit min(Hit x, Hit y) {
     } else {
         return y;
     }
-}
-
-// normal estimation
-#define kcn vec2(1, -1)
-vec3 calcNormal(vec3 p) {
-    return normalize(
-        kcn.xyy * scene(p + kcn.xyy * EPS).dist +
-        kcn.yyx * scene(p + kcn.yyx * EPS).dist +
-        kcn.yxy * scene(p + kcn.yxy * EPS).dist +
-        kcn.xxx * scene(p + kcn.xxx * EPS).dist
-    );
 }
 
 /** Constants */
