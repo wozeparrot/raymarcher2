@@ -8,9 +8,20 @@ import argparse
 import logging
 import subprocess
 
+# silent import pygame
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
+
 # base render function
 def render_base(args, folder):
     SIZE = (args.width, args.height)
+
+    # pygame setup if visual enabled
+    surf = None
+    if (args.vis):
+        pygame.init()
+        surf = pygame.display.set_mode(SIZE)
 
     # change verbosity level
     kp_logger = logging.getLogger("kp")
@@ -81,6 +92,24 @@ def render_base(args, folder):
         frame = np.flip(np.array(tensor_out.data()).reshape((SIZE[1], SIZE[0], 3)), axis=0)
         plt.imsave("output/image{}.png".format(i), frame)
 
+        # visualize
+        if (args.vis):
+            # create surface from array
+            surf2 = pygame.surfarray.make_surface(np.swapaxes(frame, 0, 1) * 255)
+
+            # weird pygame bug
+            surf.blit(surf2, (0, 0))
+            pygame.display.update()
+            surf.blit(surf2, (0, 0))
+            pygame.display.update()
+
+            # stop on last frame
+            if (i == args.end):
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            quit()
+
 
 # render a spv scene
 def render(args):
@@ -97,6 +126,7 @@ def pyrender(args):
     render_base(args, "pyscenes/")
 
 
+# generate gif
 def gif(args):
     # generate gif
     image_list = []
@@ -123,6 +153,7 @@ if __name__ == "__main__":
     render_parser.add_argument("--device", type=int, default=0, help="which device to render on")
     render_parser.add_argument("--width", type=int, default=320, help="width of image to render")
     render_parser.add_argument("--height", type=int, default=240, help="height of image to render")
+    render_parser.add_argument("--vis", action="store_true", help="show frames after rendering")
     render_parser.set_defaults(func=render)
 
     # pyrender subcommand
@@ -133,6 +164,7 @@ if __name__ == "__main__":
     pyrender_parser.add_argument("--device", type=int, default=0, help="which device to render on")
     pyrender_parser.add_argument("--width", type=int, default=320, help="width of image to render")
     pyrender_parser.add_argument("--height", type=int, default=240, help="height of image to render")
+    pyrender_parser.add_argument("--vis", action="store_true", help="show frames after rendering")
     pyrender_parser.set_defaults(func=pyrender)
 
     # gif subcommand
