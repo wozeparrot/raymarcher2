@@ -187,7 +187,6 @@ float geometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 vec3 lightC(Light light, ObjHit oh, vec3 p, vec3 eye) {
     // Normalized view direction
     vec3 viewDir = normalize(eye - p);
-
     // Normalized light direction
     vec3 lightDir = normalize(light.pos - p);
     // Normalized halfway direction between light and view

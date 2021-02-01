@@ -2,8 +2,8 @@ import scene as s
 
 s.MAX_BOUNCES = 10
 
-s.Material("simple", (0.2, 0, 0.2), 1, 0.4, 0, 0.3)
-s.Material("floor", (0.6, 0.6, 0.6), 0, 1, 0.2, 0)
+s.Material("simple", (0.2, 0, 0.2), 1, 0.4, 0, 0.3, 0.0, 1.0)
+s.Material("floor", (0.6, 0.6, 0.6), 0, 1, 0.2, 0, 0.0, 1.0)
 
 s.Object("ball0", "sphere", (0, 1, 0), 1, "simple")
 s.Object("ball1", "sphere", (2, 1.5, 0), 1, "simple")

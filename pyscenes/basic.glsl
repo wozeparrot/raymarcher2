@@ -15,7 +15,9 @@ const Mat mat_simple = Mat(
 	1,
 	0.4,
 	0,
-	0.3
+	0.3,
+	0.0,
+	1.0
 );
 
 const Mat mat_floor = Mat(
@@ -23,7 +25,9 @@ const Mat mat_floor = Mat(
 	0,
 	1,
 	0.2,
-	0
+	0,
+	0.0,
+	1.0
 );
 
 #define obj_ball0 0

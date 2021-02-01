@@ -25,7 +25,7 @@ def generate(name):
     global EPS, MAX_STEPS, NEAR_CLIP, FAR_CLIP, FOV, MAX_BOUNCES
 
     # open file
-    f = open(name + ".glsl", "w")
+    f = open("pyscenes/" + name + ".glsl", "w")
 
     f.write("#version 450\n\n")
 
@@ -41,13 +41,15 @@ def generate(name):
     f.write("#include \"pre.glsl\"\n\n")
 
     # generate materials
-    for i, (name, obj) in enumerate(materials.items()):
+    for i, (name, mat) in enumerate(materials.items()):
         f.write("const Mat mat_{} = Mat(\n".format(name))
-        f.write("\tvec3{},\n".format(obj[0]))
-        f.write("\t{},\n".format(obj[1]))
-        f.write("\t{},\n".format(obj[2]))
-        f.write("\t{},\n".format(obj[3]))
-        f.write("\t{}\n".format(obj[4]))
+        f.write("\tvec3{},\n".format(mat[0]))
+        f.write("\t{},\n".format(mat[1]))
+        f.write("\t{},\n".format(mat[2]))
+        f.write("\t{},\n".format(mat[3]))
+        f.write("\t{},\n".format(mat[4]))
+        f.write("\t{},\n".format(mat[5]))
+        f.write("\t{}\n".format(mat[6]))
         f.write(");\n\n")
 
     # generate objhits
@@ -144,12 +146,12 @@ def Object(name, kind, pos, scale, mat):
     objects[name] = (kind, pos, scale, mat)
 
 
-def Material(name, albedo, metallic, roughness, ambient, reflectance):
+def Material(name, albedo, metallic, roughness, ambient, reflectance, refractance, ior):
     # declare globals
     global materials
 
     # put material into dict
-    materials[name] = (albedo, metallic, roughness, ambient, reflectance)
+    materials[name] = (albedo, metallic, roughness, ambient, reflectance, refractance, ior)
 
 
 def Camera(pos, look):
