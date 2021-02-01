@@ -15,7 +15,7 @@ const Mat mat_simple = Mat(
 	1,
 	0.4,
 	0,
-	0.3,
+	0.7,
 	0.0,
 	1.0
 );

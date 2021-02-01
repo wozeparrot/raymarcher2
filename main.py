@@ -8,11 +8,10 @@ import argparse
 import logging
 import subprocess
 
-# render size
-SIZE = (320, 240)
-
 # base render function
 def render_base(args, folder):
+    SIZE = (args.width, args.height)
+
     # change verbosity level
     kp_logger = logging.getLogger("kp")
     kp_logger.setLevel(50 - (max(min(args.verbose, 4), 0) * 10))
@@ -119,17 +118,21 @@ if __name__ == "__main__":
     # render subcommand
     render_parser = subparsers.add_parser("render", help="render scene")
     render_parser.add_argument("scene", type=str, help="name of the scene to render")
-    render_parser.add_argument("--start", default=0, help="frame to start rendering from")
-    render_parser.add_argument("--end", default=0, help="frame to stop rendering on")
-    render_parser.add_argument("--device", default=0, help="which device to render on")
+    render_parser.add_argument("--start", type=int, default=0, help="frame to start rendering from")
+    render_parser.add_argument("--end", type=int, default=0, help="frame to stop rendering on")
+    render_parser.add_argument("--device", type=int, default=0, help="which device to render on")
+    render_parser.add_argument("--width", type=int, default=320, help="width of image to render")
+    render_parser.add_argument("--height", type=int, default=240, help="height of image to render")
     render_parser.set_defaults(func=render)
 
     # pyrender subcommand
     pyrender_parser = subparsers.add_parser("pyrender", help="render a python scene")
     pyrender_parser.add_argument("scene", type=str, help="name of the scene to render")
-    pyrender_parser.add_argument("--start", default=0, help="frame to start rendering from")
-    pyrender_parser.add_argument("--end", default=0, help="frame to stop rendering on")
-    pyrender_parser.add_argument("--device", default=0, help="which device to render on")
+    pyrender_parser.add_argument("--start", type=int, default=0, help="frame to start rendering from")
+    pyrender_parser.add_argument("--end", type=int, default=0, help="frame to stop rendering on")
+    pyrender_parser.add_argument("--device", type=int, default=0, help="which device to render on")
+    pyrender_parser.add_argument("--width", type=int, default=320, help="width of image to render")
+    pyrender_parser.add_argument("--height", type=int, default=240, help="height of image to render")
     pyrender_parser.set_defaults(func=pyrender)
 
     # gif subcommand
