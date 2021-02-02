@@ -21,7 +21,7 @@ const Mat mat_simple = Mat(
 );
 
 const Mat mat_floor = Mat(
-	vec3(0.6, 0.6, 0.6),
+	vec3(0.2, 1.0, 0.2),
 	0,
 	1,
 	0.2,
