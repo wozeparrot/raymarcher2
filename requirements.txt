@@ -1,10 +1,13 @@
+cffi==1.14.4
 cycler==0.10.0
 imageio==2.9.0
 kiwisolver==1.3.1
-kp==0.5.1
+kp @ git+git://github.com/EthicalML/vulkan-kompute.git@df5477a2d76b920232811e8513579240467ad673
 matplotlib==3.3.3
 numpy==1.19.5
 Pillow==8.1.0
+pycparser==2.20
+pygame==2.0.1
 pyparsing==2.4.7
 pyshader==0.7.0
 python-dateutil==2.8.1
